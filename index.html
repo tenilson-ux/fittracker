@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTracker - Acompanhamento de Emagrecimento</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1>🎯 FitTracker</h1>
+            <p class="subtitle">Seu companheiro de emagrecimento</p>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="tab-btn" data-tab="profile">👤 Perfil</button>
+        <button class="tab-btn" data-tab="weight">⚖️ Peso</button>
+        <button class="tab-btn" data-tab="food">🍽️ Alimentação</button>
+        <button class="tab-btn" data-tab="exercise">🏃 Exercícios</button>
+        <button class="tab-btn" data-tab="water">💧 Água</button>
+        <button class="tab-btn" data-tab="progress">📈 Progresso</button>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container">
+        
+        <!-- Dashboard Tab -->
+        <section id="dashboard" class="tab-content active">
+            <h2>Resumo do Dia</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Peso Atual</h3>
+                    <p class="metric" id="current-weight">--</p>
+                    <small id="weight-change">Sem dados</small>
+                </div>
+                
+                <div class="card">
+                    <h3>IMC</h3>
+                    <p class="metric" id="current-bmi">--</p>
+                    <small id="bmi-category">--</small>
+                </div>
+                
+                <div class="card">
+                    <h3>Meta Diária de Calorias</h3>
+                    <p class="metric" id="calorie-goal">--</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="calorie-progress"></div>
+                    </div>
+                    <small id="calorie-consumed">0 / 0 kcal</small>
+                </div>
+                
+                <div class="card">
+                    <h3>Água Consumida</h3>
+                    <p class="metric" id="water-consumed">0L</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="water-progress"></div>
+                    </div>
+                    <small id="water-goal-text">Meta: 2.5L</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Resumo Nutricional de Hoje</h3>
+                <div class="macro-grid">
+                    <div class="macro-item">
+                        <span class="macro-label">Proteínas</span>
+                        <span class="macro-value" id="protein-today">0g</span>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill protein" id="protein-bar"></div>
+                        </div>
+                    </div>
+                    <div class="macro-item">
+                        <span class="macro-label">Carboidratos</span>
+                        <span class="macro-value" id="carbs-today">0g</span>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill carbs" id="carbs-bar"></div>
+                        </div>
+                    </div>
+                    <div class="macro-item">
+                        <span class="macro-label">Gorduras</span>
+                        <span class="macro-value" id="fats-today">0g</span>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill fats" id="fats-bar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Atividades Hoje</h3>
+                <div id="today-activities">
+                    <p class="empty-state">Nenhuma atividade registrada hoje</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Tab -->
+        <section id="profile" class="tab-content">
+            <h2>Meu Perfil</h2>
+            
+            <div class="card">
+                <form id="profile-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="age">Idade</label>
+                            <input type="number" id="age" min="10" max="120" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gender">Sexo</label>
+                            <select id="gender" required>
+                                <option value="">Selecione</option>
+                                <option value="male">Masculino</option>
+                                <option value="female">Feminino</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="height">Altura (cm)</label>
+                            <input type="number" id="height" min="100" max="250" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="initial-weight">Peso Inicial (kg)</label>
+                            <input type="number" id="initial-weight" step="0.1" min="30" max="300" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goal-weight">Peso Meta (kg)</label>
+                            <input type="number" id="goal-weight" step="0.1" min="30" max="300" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activity-level">Nível de Atividade</label>
+                            <select id="activity-level" required>
+                                <option value="">Selecione</option>
+                                <option value="1.2">Sedentário (pouco ou nenhum exercício)</option>
+                                <option value="1.375">Levemente ativo (1-3 dias/semana)</option>
+                                <option value="1.55">Moderadamente ativo (3-5 dias/semana)</option>
+                                <option value="1.725">Muito ativo (6-7 dias/semana)</option>
+                                <option value="1.9">Extremamente ativo (2x por dia)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="goal-type">Objetivo</label>
+                            <select id="goal-type" required>
+                                <option value="">Selecione</option>
+                                <option value="lose">Perder peso</option>
+                                <option value="maintain">Manter peso</option>
+                                <option value="gain">Ganhar peso</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">💾 Salvar Perfil</button>
+                </form>
+            </div>
+
+            <div class="card" id="profile-summary" style="display: none;">
+                <h3>Resumo do Perfil</h3>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <strong>TMB (Taxa Metabólica Basal):</strong>
+                        <span id="bmr-value">--</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>TDEE (Gasto Calórico Total):</strong>
+                        <span id="tdee-value">--</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Meta Calórica Diária:</strong>
+                        <span id="daily-calorie-goal">--</span>
+                    </div>
+                    <div class="summary-item">
+                        <strong>Perda/Ganho Semanal Estimado:</strong>
+                        <span id="weekly-goal">--</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Weight Tab -->
+        <section id="weight" class="tab-content">
+            <h2>Registro de Peso</h2>
+            
+            <div class="card">
+                <h3>Adicionar Pesagem</h3>
+                <form id="weight-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="weight-date">Data</label>
+                            <input type="date" id="weight-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="weight-value">Peso (kg)</label>
+                            <input type="number" id="weight-value" step="0.1" min="30" max="300" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">➕ Adicionar Pesagem</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Histórico de Peso</h3>
+                <div class="chart-container">
+                    <canvas id="weight-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Últimas Pesagens</h3>
+                <div class="table-responsive">
+                    <table id="weight-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Peso</th>
+                                <th>Variação</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="weight-list">
+                            <tr>
+                                <td colspan="4" class="empty-state">Nenhuma pesagem registrada</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Food Tab -->
+        <section id="food" class="tab-content">
+            <h2>Registro de Alimentação</h2>
+            
+            <div class="card">
+                <h3>Adicionar Refeição</h3>
+                <form id="food-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="food-date">Data</label>
+                            <input type="date" id="food-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="meal-type">Tipo de Refeição</label>
+                            <select id="meal-type" required>
+                                <option value="breakfast">Café da Manhã</option>
+                                <option value="morning-snack">Lanche da Manhã</option>
+                                <option value="lunch">Almoço</option>
+                                <option value="afternoon-snack">Lanche da Tarde</option>
+                                <option value="dinner">Jantar</option>
+                                <option value="supper">Ceia</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="food-description">Descrição do Alimento</label>
+                            <input type="text" id="food-description" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="food-calories">Calorias (kcal)</label>
+                            <input type="number" id="food-calories" min="0" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="food-protein">Proteínas (g)</label>
+                            <input type="number" id="food-protein" min="0" step="0.1" value="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="food-carbs">Carboidratos (g)</label>
+                            <input type="number" id="food-carbs" min="0" step="0.1" value="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="food-fats">Gorduras (g)</label>
+                            <input type="number" id="food-fats" min="0" step="0.1" value="0">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">➕ Adicionar Refeição</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Refeições de Hoje</h3>
+                <div id="today-meals">
+                    <p class="empty-state">Nenhuma refeição registrada hoje</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Histórico de Alimentação</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Refeição</th>
+                                <th>Alimento</th>
+                                <th>Calorias</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="food-list">
+                            <tr>
+                                <td colspan="5" class="empty-state">Nenhuma refeição registrada</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Exercise Tab -->
+        <section id="exercise" class="tab-content">
+            <h2>Registro de Exercícios</h2>
+            
+            <div class="card">
+                <h3>Adicionar Exercício</h3>
+                <form id="exercise-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="exercise-date">Data</label>
+                            <input type="date" id="exercise-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exercise-type">Tipo de Exercício</label>
+                            <select id="exercise-type" required>
+                                <option value="">Selecione</option>
+                                <option value="walking">Caminhada</option>
+                                <option value="running">Corrida</option>
+                                <option value="cycling">Ciclismo</option>
+                                <option value="swimming">Natação</option>
+                                <option value="gym">Academia</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="dance">Dança</option>
+                                <option value="sports">Esportes</option>
+                                <option value="other">Outro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="exercise-description">Descrição</label>
+                            <input type="text" id="exercise-description" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exercise-duration">Duração (minutos)</label>
+                            <input type="number" id="exercise-duration" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="exercise-calories">Calorias Queimadas</label>
+                            <input type="number" id="exercise-calories" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">➕ Adicionar Exercício</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Exercícios desta Semana</h3>
+                <div class="chart-container">
+                    <canvas id="exercise-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Histórico de Exercícios</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Duração</th>
+                                <th>Calorias</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="exercise-list">
+                            <tr>
+                                <td colspan="6" class="empty-state">Nenhum exercício registrado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Water Tab -->
+        <section id="water" class="tab-content">
+            <h2>Consumo de Água</h2>
+            
+            <div class="card">
+                <h3>Registro de Hoje</h3>
+                <div class="water-tracker">
+                    <div class="water-visual">
+                        <div class="water-bottle">
+                            <div class="water-fill" id="water-fill"></div>
+                        </div>
+                        <p class="water-amount" id="water-amount-display">0 / 2500 ml</p>
+                    </div>
+                    
+                    <div class="water-buttons">
+                        <button class="btn btn-water" data-amount="250">+ 250ml</button>
+                        <button class="btn btn-water" data-amount="500">+ 500ml</button>
+                        <button class="btn btn-water" data-amount="750">+ 750ml</button>
+                        <button class="btn btn-water" data-amount="1000">+ 1L</button>
+                        <button class="btn btn-secondary" id="reset-water">🔄 Resetar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Histórico Semanal</h3>
+                <div class="chart-container">
+                    <canvas id="water-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Configurações</h3>
+                <form id="water-goal-form">
+                    <div class="form-group">
+                        <label for="water-goal">Meta Diária de Água (ml)</label>
+                        <input type="number" id="water-goal-input" min="1000" max="5000" step="100" value="2500">
+                    </div>
+                    <button type="submit" class="btn btn-primary">💾 Salvar Meta</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Progress Tab -->
+        <section id="progress" class="tab-content">
+            <h2>Progresso Geral</h2>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Peso Perdido/Ganho</h3>
+                    <p class="metric-large" id="total-weight-change">--</p>
+                    <small>desde o início</small>
+                </div>
+                
+                <div class="card">
+                    <h3>Até a Meta</h3>
+                    <p class="metric-large" id="weight-to-goal">--</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="goal-progress"></div>
+                    </div>
+                    <small id="goal-percentage">0% concluído</small>
+                </div>
+                
+                <div class="card">
+                    <h3>Dias no Programa</h3>
+                    <p class="metric-large" id="days-in-program">--</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Média de Exercícios</h3>
+                    <p class="metric-large" id="avg-exercises">--</p>
+                    <small>por semana</small>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Evolução de Peso (Últimos 30 dias)</h3>
+                <div class="chart-container">
+                    <canvas id="progress-weight-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Balanço Calórico Semanal</h3>
+                <div class="chart-container">
+                    <canvas id="calorie-balance-chart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Estatísticas</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Total de Calorias Consumidas</span>
+                        <span class="stat-value" id="total-calories-consumed">0 kcal</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total de Calorias Queimadas</span>
+                        <span class="stat-value" id="total-calories-burned">0 kcal</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total de Água Consumida</span>
+                        <span class="stat-value" id="total-water">0 L</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total de Exercícios</span>
+                        <span class="stat-value" id="total-exercises">0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 FitTracker. Desenvolvido para seu sucesso! 💪</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/calculations.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
